@@ -9,7 +9,7 @@ end
 
 function love.update(dt)
 	Player.update(dt)
-	local playerX, playerY = Player.x, Player.y
+	local playerX, playerY = Player.x, Player.y - 100
 	Camera:lookAt(playerX, playerY)
 end
 
