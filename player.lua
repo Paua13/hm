@@ -15,6 +15,7 @@ function player.load()
 	player.dashVx = 0
 	player.dashVy = 0
 	player.state = "normal"
+	player.swingVisualTimer = 0
 
 	player.sprite = love.graphics.newImage("assets/p1.png")
 end
@@ -31,6 +32,10 @@ function player.update(dt)
 		player.state = "attacking"
 	else
 		player.state = "normal"
+	end
+
+	if player.swingVisualTimer > 0 then
+		player.swingVisualTimer = player.swingVisualTimer - dt
 	end
 
 	-- Dash mechanics

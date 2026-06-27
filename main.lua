@@ -10,7 +10,10 @@ function love.load()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	Player.keypressed(key)
+	if key == "space" then
+		Enemy1.tryMeleeAttack(Player.x, Player.y, Player.angle)
+		Player.swingVisualTimer = 0.1
+	end
 end
 
 
@@ -18,10 +21,6 @@ function love.update(dt)
 	Player.update(dt)
 	Enemy1.update(dt, Player.x, Player.y)
 	playerX, playerY = Player.x, Player.y - 100
-	Enemy1.checkCollisions(Player.x, Player.y, Player.state)
-	if Player.state == "attacking" then
-		Player.state = "normal"
-	end
 	Camera:lookAt(playerX, playerY)
 end
 

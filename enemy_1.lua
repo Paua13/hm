@@ -48,34 +48,37 @@ function enemy.update(dt, playerX, playerY)
     end
 end
 
-function collisionCheck(playerX, playerY, enemyX, enemyY)
-    local distance = math.sqrt((playerX - enemyX)^2 + (playerY - enemyY)^2)
-    return distance < 16
-end
+function enemy.tryMeleeAttack(px, py, pAngle)
+    local attackRange = 50
+    local maxAttackAngle = 1.0
 
-function enemy.checkCollisions(playerX, playerY)
     for i = #enemy.list, 1, -1 do
         local e = enemy.list[i]
-        local distance = math.sqrt((playerX - e.x)^2 + (playerY - e.y)^2)
-        local hitRegistered = false
-
-        if playerState == "attacking" and distance < 50 then
-            local angleToEnemy = math.atan2(e.y - playerY, e.x - playerX)
-            local angleDiff = math.abs(playerAngle - angleToEnemy)
-            if angleDiff > math.pi then angleDiff = (math.pi * 2) - angleDiff end
-            if angleDiff < 1.0 then
-                table.remove(enemy.list, i)
-                hitRegistered = true
-                print("Enemy killed!")
+        local dx = e.x - px
+        local dy = e.y - py
+        local distance = math.sqrt(dx^2, dy^2)
+        if distance <= attackRange then
+            local angleToEnemy = math.atan2(dy, dx)
+            local angleDiff = math.abs(pAngle - angleToEnemy)
+            if angleDiff > math.pi then
+                angleDiff = (math.pi * 2) - angleDiff
             end
-        end
-        if not hitRegistered and distance < 18 then
-            print("Player hit by enemy. Game Over")
+            if angleDiff <= maxAttackAngle then
+                table.remove(enemy.list, i)
+                print("Melee Kill Registered!")
+            end
         end
     end
 end
 
-
+function enemy.checkPlayerDamage(px, py)
+    for _, e in ipairs(enemy.list) do
+        local distance = math.sqrt((px - e.x)^2 + (py - e.y)^2)
+        if distance < 18 then
+            print("Player Dead")
+        end
+    end
+end
 
 function enemy.draw()
     for _, e in ipairs(enemy.list) do
