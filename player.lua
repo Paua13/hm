@@ -23,9 +23,20 @@ function player.update(dt)
 		player.x = player.x + player.speed * dt
 	end
 
-	local mouseX, mouseY = love.mouse.getPosition()
+	if love.keyreleased("lshift") then
+		player.speed = 500
+	else
+		player.speed = 250
+	end
 
-	player.angle = math.atan2(mouseY - player.y, mouseX - player.x)
+	local screenMouseX, screenMouseY = love.mouse.getPosition()
+
+	local worldMouseX, worldMouseY = Camera:worldCoords(screenMouseX, screenMouseY)
+
+	local dx = worldMouseX - player.x
+	local dy = worldMouseY - player.y
+
+	player.angle = math.atan2(dy, dx)
 end
 
 function player.draw()
